@@ -1,66 +1,239 @@
 # isireel
 A reel of objects for controlling eye speed at internet rates.
 
-## AI Model Training & Chat
+## Build Your Own AI from Scratch
 
-Train your own AI language model from scratch or fine-tune existing models.
+Train neural networks from scratch using LLM-generated training data. No pre-trained models - build and train your own AI.
+
+### What This Does
+
+1. **Generate Training Data** - Use LLMs (Claude/GPT) to create synthetic datasets
+2. **Build Neural Networks** - From-scratch architectures (feedforward, RNN, CNN)
+3. **Train Your Model** - Complete training pipeline with validation
+4. **Use Your AI** - Inference interface for predictions
 
 ### Quick Start
 
-1. **Install dependencies:**
+#### 1. Install Dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
 
-2. **Train a model:**
+#### 2. Set Up API Key
+
+You need an LLM API key to generate training data:
+
+```bash
+# For Claude (recommended)
+export ANTHROPIC_API_KEY='your-key-here'
+
+# OR for OpenAI
+export OPENAI_API_KEY='your-key-here'
+```
+
+#### 3. Generate Training Data
+
+```bash
+python data_generator.py
+```
+
+This will:
+- Use LLM to generate synthetic training examples
+- Create `sentiment_data.json` with labeled examples
+- Ready for training
+
+#### 4. Train Your Model
+
 ```bash
 python train.py
 ```
 
 This will:
-- Download GPT-2 (small) as the base model
-- Fine-tune it on WikiText dataset
-- Save the trained model to `./trained_model/`
+- Build a neural network from scratch
+- Train on LLM-generated data
+- Save trained model to `trained_model.pth`
+- Track accuracy and loss
 
-3. **Chat with your AI:**
+#### 5. Use Your AI
+
 ```bash
 python chat.py
 ```
 
+Interactive mode - test your trained model!
+
+### Project Structure
+
+```
+isireel/
+├── network.py          # Neural network architectures (from scratch)
+├── data_generator.py   # LLM-based data generation
+├── train.py            # Training pipeline
+├── chat.py             # Inference interface
+└── requirements.txt    # Dependencies
+```
+
 ### Customization
 
-**train.py** - Modify these parameters:
-- `model_name`: Change to larger models like "meta-llama/Llama-2-7b-hf" or "mistralai/Mistral-7B-v0.1"
-- `dataset_name`: Use your own dataset or different HuggingFace datasets
-- `num_epochs`: More epochs = better learning (but slower)
-- `batch_size`: Increase if you have more GPU memory
+#### Change Neural Network Architecture
 
-**chat.py** - Your AI assistant interface:
-- Change `model_path` to use different models
-- Adjust `temperature` for more creative (higher) or focused (lower) responses
-
-### Training Your Own Data
-
-Create a text file or dataset and modify `train.py` to load it:
+Edit `network.py` or modify in `train.py`:
 
 ```python
-from datasets import Dataset
+model = create_model(
+    'feedforward',
+    input_size=input_size,
+    hidden_sizes=[512, 256, 128],  # Customize layer sizes
+    output_size=output_size,
+    dropout=0.3  # Adjust dropout
+)
+```
 
-# Your custom data
-texts = ["Your training text here...", "More examples..."]
-dataset = Dataset.from_dict({"text": texts})
+Available architectures:
+- `feedforward` - Standard neural network
+- `recurrent` - LSTM/RNN for sequences
+- `convolutional` - CNN for images
+
+#### Generate Custom Data
+
+Modify `data_generator.py`:
+
+```python
+# Custom classification task
+generator.generate_classification_data(
+    categories=["spam", "not_spam"],
+    examples_per_category=100,
+    domain="email messages"
+)
+
+# Custom general task
+generator.generate_dataset(
+    task_description="Medical diagnosis based on symptoms",
+    num_examples=500
+)
+```
+
+#### Training Parameters
+
+In `train.py`:
+
+```python
+trainer.train(
+    train_loader,
+    val_loader,
+    num_epochs=20,      # More epochs = better learning
+    learning_rate=0.001, # Adjust learning speed
+    save_path='my_model.pth'
+)
+```
+
+### How It Works
+
+#### 1. Data Generation
+- LLM creates synthetic training examples
+- Diverse, high-quality data
+- No manual labeling needed
+
+#### 2. Neural Network
+- Built from PyTorch primitives
+- Custom architectures
+- Full control over layers
+
+#### 3. Training
+- Backpropagation from scratch
+- Adam optimizer
+- Validation tracking
+
+#### 4. Inference
+- Load trained model
+- Make predictions
+- Get confidence scores
+
+### Advanced Usage
+
+#### Use Different LLM Providers
+
+```python
+# Use Claude
+generator = LLMDataGenerator(provider="anthropic")
+
+# Use GPT
+generator = LLMDataGenerator(provider="openai")
+```
+
+#### Train on Your Own Data
+
+```python
+# Load custom data
+with open('my_data.json', 'r') as f:
+    data = json.load(f)
+
+train_classification_model("my_data.json")
+```
+
+#### Export Model for Production
+
+```python
+# Save for PyTorch
+torch.save(model.state_dict(), 'model_weights.pth')
+
+# Convert to ONNX
+torch.onnx.export(model, dummy_input, "model.onnx")
+
+# Use TorchScript
+scripted_model = torch.jit.script(model)
+scripted_model.save("model_scripted.pt")
+```
+
+### Example Workflow
+
+```bash
+# 1. Generate sentiment analysis data
+python data_generator.py
+
+# 2. Train model
+python train.py
+
+# 3. Test predictions
+python chat.py
+>>> This product is amazing!
+Prediction: positive
+Confidence: 94.32%
 ```
 
 ### Hardware Requirements
 
-- **CPU**: Works but slow (for testing only)
+- **CPU**: Works (slower training)
 - **GPU**: Recommended (NVIDIA with CUDA)
-- **RAM**: 8GB+ for small models, 16GB+ for larger models
+- **RAM**: 4GB+ for small models
 
 ### Next Steps
 
-- Add more training data for better responses
-- Use larger base models for more capability
-- Implement RAG (Retrieval Augmented Generation) for knowledge
-- Add memory/conversation history
-- Deploy as a web service
+- Generate more training data for better accuracy
+- Experiment with different architectures
+- Add more categories/classes
+- Deploy as API service
+- Fine-tune hyperparameters
+- Implement ensemble models
+
+### Troubleshooting
+
+**No API key found:**
+```bash
+export ANTHROPIC_API_KEY='your-key'
+```
+
+**Training data not found:**
+```bash
+python data_generator.py  # Generate data first
+```
+
+**Out of memory:**
+- Reduce `batch_size` in train.py
+- Use smaller `hidden_sizes`
+- Switch to CPU training
+
+### License
+
+MIT

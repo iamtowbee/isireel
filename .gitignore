@@ -10,8 +10,30 @@ ENV/
 dist/
 build/
 logs/
+
+# Model files
 trained_model/
 *.pth
 *.bin
 *.ckpt
+*.pkl
+*.onnx
+*.pt
+
+# Data files
+*.json
+!requirements.json
+
+# Jupyter
 .ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
