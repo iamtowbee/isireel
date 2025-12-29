@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import TerminalScreen from './app/screens/TerminalScreen';
 import GUIScreen from './app/screens/GUIScreen';
 import JobsScreen from './app/screens/JobsScreen';
+import IPAManagerScreen from './app/screens/IPAManagerScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -23,8 +24,10 @@ const App = () => {
                 iconName = focused ? 'terminal' : 'terminal-outline';
               } else if (route.name === 'GUI') {
                 iconName = focused ? 'apps' : 'apps-outline';
-              } else {
+              } else if (route.name === 'Jobs') {
                 iconName = focused ? 'list' : 'list-outline';
+              } else {
+                iconName = focused ? 'download' : 'download-outline';
               }
 
               return <Icon name={iconName} size={size} color={color} />;
@@ -63,6 +66,13 @@ const App = () => {
             component={JobsScreen}
             options={{
               title: 'Training Jobs',
+            }}
+          />
+          <Tab.Screen
+            name="IPAs"
+            component={IPAManagerScreen}
+            options={{
+              title: 'IPA Manager',
             }}
           />
         </Tab.Navigator>
