@@ -1,7 +1,7 @@
 #!/bin/bash
-# Quick Start Script for Android Log Viewer
+# Quick Start Script for iOS Log Viewer
 
-echo "🚀 Android Log Viewer - Quick Start"
+echo "🚀 iOS Log Viewer - Quick Start"
 echo "===================================="
 echo ""
 

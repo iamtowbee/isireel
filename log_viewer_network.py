@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Android-style Log Viewer with Network Support
-Displays logs from UDP/TCP server in real-time
+iOS Log Viewer with Network Support
+Displays iOS logs from UDP/TCP server in real-time using Android-style log levels
 """
 
 import asyncio
@@ -19,7 +19,7 @@ from rich.text import Text
 
 
 class LogLevel(Enum):
-    """Android log levels matching logcat"""
+    """Log levels using Android-style codes (V/D/I/W/E/F)"""
     VERBOSE = ("V", "verbose", "dim cyan")
     DEBUG = ("D", "debug", "blue")
     INFO = ("I", "info", "green")
@@ -45,7 +45,7 @@ class LogEntry:
 
 
 class LogParser:
-    """Parses Android logcat-style log messages"""
+    """Parses log messages with Android-style log levels"""
 
     @staticmethod
     def parse_level(level_str: str) -> LogLevel:
@@ -63,7 +63,7 @@ class LogParser:
     @staticmethod
     def parse_line(line: str) -> Optional[LogEntry]:
         """
-        Parse a logcat-style line:
+        Parse a log line:
         Format: MM-DD HH:MM:SS.mmm  PID  TID LEVEL TAG: MESSAGE
         or simple: LEVEL/TAG: MESSAGE
         """
@@ -125,7 +125,7 @@ class LogParser:
 
 
 class LogViewerApp(App):
-    """Terminal UI application for viewing Android logs"""
+    """Terminal UI application for viewing iOS logs"""
 
     CSS = """
     Screen {
@@ -492,7 +492,7 @@ class LogViewerApp(App):
 def main():
     import argparse
 
-    parser = argparse.ArgumentParser(description="Android-style Log Viewer with Network Support")
+    parser = argparse.ArgumentParser(description="iOS Log Viewer with Network Support")
     parser.add_argument("--host", default="localhost", help="Server host (default: localhost)")
     parser.add_argument("--port", type=int, default=5555, help="Server port (default: 5555)")
     parser.add_argument("--protocol", choices=["udp", "tcp"], default="udp", help="Protocol (default: udp)")

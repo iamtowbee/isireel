@@ -1,8 +1,8 @@
-# isireel - Android Log Viewer 📱
+# isireel - iOS Log Viewer 📱
 
-A beautiful terminal UI application for viewing Android system logs (logcat-style) with real-time network support.
+A beautiful terminal UI application for viewing iOS system logs with real-time network support.
 
-Perfect for monitoring logs from Android servers, Dalvik runtime, and system-level logging.
+Perfect for monitoring logs from iOS servers and system-level logging. Uses Android-style log levels (V/D/I/W/E/F) for familiarity.
 
 ## Features ✨
 
@@ -124,11 +124,11 @@ E/Network: Connection timeout
 | `e` | Toggle errors-only mode |
 | `Ctrl+S` | Save logs to file |
 
-## Integration with Android 🤖
+## Integration with iOS 🍎
 
-### ADB Logcat Integration
+### iOS Logging Integration
 
-Stream Android device logs directly to the viewer:
+Stream iOS logs directly to the viewer from your iOS app or server:
 
 ```bash
 # Start the log server
@@ -137,23 +137,30 @@ python log_server.py server --host 0.0.0.0 --port 5555 --protocol tcp &
 # Start the viewer
 python log_viewer_network.py --host localhost --port 5555 --protocol tcp &
 
-# Stream logcat to the server
-adb logcat | while read line; do echo "$line" | nc localhost 5555; done
+# From your iOS app/server, send logs to the viewer
+# Example: Using netcat from your log source
+tail -f /path/to/your/ios.log | while read line; do echo "$line" | nc localhost 5555; done
 ```
 
-### Dalvik/ART Logging
+### iOS Device Logs
 
-For system-level Dalvik/ART logs:
+For iOS device console logs using `idevicesyslog` (requires libimobiledevice):
 
 ```bash
-adb logcat -v time dalvikvm:I *:S | while read line; do echo "$line" | nc -u localhost 5555; done
+# Install libimobiledevice first: brew install libimobiledevice
+idevicesyslog | while read line; do echo "$line" | nc -u localhost 5555; done
 ```
 
-### Filter Specific Tags
+### macOS Console Logs
+
+Stream macOS/iOS Simulator logs:
 
 ```bash
-# Only show ActivityManager logs
-adb logcat ActivityManager:I *:S | while read line; do echo "$line" | nc localhost 5555; done
+# Stream iOS Simulator logs
+xcrun simctl spawn booted log stream --level debug | while read line; do echo "$line" | nc localhost 5555; done
+
+# Or use macOS Console
+log stream --predicate 'subsystem contains "com.yourapp"' | while read line; do echo "$line" | nc -u localhost 5555; done
 ```
 
 ## Project Structure 📁
@@ -169,14 +176,14 @@ isireel/
 
 ## Examples 💡
 
-### Example 1: Monitor Android App
+### Example 1: Monitor iOS App
 
 ```bash
 # Terminal 1: Start viewer
 python log_viewer_network.py --port 5555
 
-# Terminal 2: Stream specific app logs
-adb logcat -v time com.myapp:D *:S | while read line; do echo "$line" | nc -u localhost 5555; done
+# Terminal 2: Stream specific app logs from iOS Simulator
+xcrun simctl spawn booted log stream --predicate 'subsystem contains "com.yourapp"' | while read line; do echo "$line" | nc -u localhost 5555; done
 ```
 
 ### Example 2: Monitor System Errors
@@ -186,8 +193,8 @@ adb logcat -v time com.myapp:D *:S | while read line; do echo "$line" | nc -u lo
 python log_viewer_network.py --port 5555
 # Then press 'e' in the viewer to enable errors-only mode
 
-# Terminal 2: Stream all error logs
-adb logcat *:E | while read line; do echo "$line" | nc -u localhost 5555; done
+# Terminal 2: Stream error logs from your iOS server
+tail -f /var/log/yourapp/error.log | while read line; do echo "E/Server: $line" | nc -u localhost 5555; done
 ```
 
 ### Example 3: Save and Analyze Logs
@@ -243,4 +250,4 @@ Built with:
 
 ---
 
-**Made with ❤️ for Android developers and system administrators**
+**Made with ❤️ for iOS developers and system administrators**

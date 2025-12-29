@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Android-style Log Viewer - Terminal UI Application
-Displays logs with Android OS message levels (Dalvik-style)
+iOS Log Viewer - Terminal UI Application
+Displays logs with Android-style log levels (V/D/I/W/E/F) for iOS apps
 """
 
 import asyncio
@@ -19,7 +19,7 @@ from rich.text import Text
 
 
 class LogLevel(Enum):
-    """Android log levels matching logcat"""
+    """Log levels using Android-style codes (V/D/I/W/E/F)"""
     VERBOSE = ("V", "verbose", "dim cyan")
     DEBUG = ("D", "debug", "blue")
     INFO = ("I", "info", "green")
@@ -68,7 +68,7 @@ class LogEntry:
 
 
 class LogParser:
-    """Parses Android logcat-style log messages"""
+    """Parses log messages with Android-style log levels"""
 
     @staticmethod
     def parse_level(level_str: str) -> LogLevel:
@@ -86,7 +86,7 @@ class LogParser:
     @staticmethod
     def parse_line(line: str) -> Optional[LogEntry]:
         """
-        Parse a logcat-style line:
+        Parse a log line:
         Format: MM-DD HH:MM:SS.mmm  PID  TID LEVEL TAG: MESSAGE
         or simple: LEVEL/TAG: MESSAGE
         """
@@ -146,7 +146,7 @@ class LogParser:
 
 
 class LogViewerApp(App):
-    """Terminal UI application for viewing Android logs"""
+    """Terminal UI application for viewing iOS logs"""
 
     CSS = """
     Screen {
@@ -235,7 +235,7 @@ class LogViewerApp(App):
         import random
 
         levels = list(LogLevel)
-        tags = ["ActivityManager", "System", "NetworkManager", "Dalvik", "AppProcess", "SurfaceFlinger"]
+        tags = ["Network", "System", "Database", "UI", "AppDelegate", "ViewController"]
         messages = [
             "Starting activity",
             "Service connected",

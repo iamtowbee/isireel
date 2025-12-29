@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Log Server - Receives Android logs over UDP/TCP
+Log Server - Receives iOS logs over UDP/TCP
 Can be used to send logs to the log viewer
 """
 
@@ -123,7 +123,7 @@ class LogClient:
         import time
 
         levels = ["V", "D", "I", "W", "E", "F"]
-        tags = ["ActivityManager", "System", "NetworkManager", "Dalvik", "AppProcess"]
+        tags = ["Network", "System", "Database", "UI", "AppDelegate"]
         messages = [
             "Starting activity",
             "Service connected",
@@ -147,7 +147,7 @@ class LogClient:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Android-style Log Server/Client")
+    parser = argparse.ArgumentParser(description="iOS Log Server/Client with Android-style log levels")
     parser.add_argument("mode", choices=["server", "client"], help="Run as server or client")
     parser.add_argument("--host", default="localhost", help="Server host (default: localhost)")
     parser.add_argument("--port", type=int, default=5555, help="Server port (default: 5555)")
