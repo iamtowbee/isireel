@@ -1,8 +1,11 @@
-.PHONY: help rust-build rust-release python-deps ios-build rn-install rn-ios rn-build-ios clean clean-all
+.PHONY: help install rust-build rust-release python-deps ios-build rn-install rn-ios rn-build-ios clean clean-all
 
 help:
 	@echo "AI Training App - Build Commands"
 	@echo "================================="
+	@echo "🚀 Quick Start:"
+	@echo "  make install         - ONE-CLICK INSTALL (does everything!)"
+	@echo ""
 	@echo "React Native Commands:"
 	@echo "  make rn-install      - Install Node.js dependencies"
 	@echo "  make rn-build-ios    - Build Rust library and setup iOS"
@@ -18,6 +21,10 @@ help:
 	@echo "General:"
 	@echo "  make clean           - Clean build artifacts"
 	@echo "  make clean-all       - Clean everything including node_modules"
+
+# ONE-CLICK INSTALLATION
+install:
+	@./install.sh
 
 rust-build:
 	@echo "Building Rust library (debug)..."
