@@ -1,0 +1,85 @@
+name: Build iOS App
+
+on:
+  push:
+    branches: [ main, claude/* ]
+  workflow_dispatch:
+
+jobs:
+  build-ios:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Setup Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+
+    - name: Add iOS targets
+      run: |
+        rustup target add aarch64-apple-ios
+        rustup target add x86_64-apple-ios
+        rustup target add aarch64-apple-ios-sim
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build Rust library for iOS
+      run: |
+        cargo build --release --target aarch64-apple-ios
+        cargo build --release --target x86_64-apple-ios
+        cargo build --release --target aarch64-apple-ios-sim
+
+    - name: Create XCFramework
+      run: |
+        mkdir -p target/universal-sim/release
+        lipo -create \
+          target/x86_64-apple-ios/release/libai_trainer.a \
+          target/aarch64-apple-ios-sim/release/libai_trainer.a \
+          -output target/universal-sim/release/libai_trainer.a
+
+        xcodebuild -create-xcframework \
+          -library target/aarch64-apple-ios/release/libai_trainer.a \
+          -headers ios \
+          -library target/universal-sim/release/libai_trainer.a \
+          -headers ios \
+          -output ios/AITrainer.xcframework
+
+    - name: Install CocoaPods
+      run: |
+        cd ios
+        pod install
+        cd ..
+
+    - name: Build iOS app
+      run: |
+        xcodebuild -workspace ios/AITrainerTerminal.xcworkspace \
+          -scheme AITrainerTerminal \
+          -configuration Release \
+          -destination 'generic/platform=iOS' \
+          -archivePath $PWD/build/AITrainerTerminal.xcarchive \
+          archive
+
+    - name: Export IPA
+      run: |
+        xcodebuild -exportArchive \
+          -archivePath $PWD/build/AITrainerTerminal.xcarchive \
+          -exportPath $PWD/build \
+          -exportOptionsPlist ios/ExportOptions.plist
+
+    - name: Upload IPA
+      uses: actions/upload-artifact@v3
+      with:
+        name: AITrainerTerminal-iOS
+        path: build/*.ipa
+        retention-days: 30
