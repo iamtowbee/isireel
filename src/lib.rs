@@ -2,6 +2,9 @@ mod models;
 mod openai;
 mod trainer;
 
+// C API for React Native
+pub mod c_api;
+
 use pyo3::prelude::*;
 use pyo3::exceptions::PyException;
 use std::sync::Arc;
