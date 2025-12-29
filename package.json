@@ -1,0 +1,39 @@
+{
+  "name": "isireel-monorepo",
+  "version": "1.0.0",
+  "description": "Monorepo for AI/ML training and iOS log viewer projects",
+  "private": true,
+  "workspaces": [
+    "web"
+  ],
+  "scripts": {
+    "web:dev": "cd web && npm run dev",
+    "web:build": "cd web && npm run build",
+    "web:preview": "cd web && npm run preview",
+    "server:install": "cd server && pip install -r requirements.txt",
+    "server:run": "cd server && ./by.sh",
+    "ai:install": "cd ai && pip install -r requirements.txt",
+    "ai:train": "cd ai && python train.py",
+    "ai:chat": "cd ai && python chat.py",
+    "install:all": "npm install && npm run server:install && npm run ai:install",
+    "clean": "rm -rf node_modules web/node_modules web/dist */__pycache__ */.pytest_cache",
+    "lint": "echo 'Linting not configured yet'",
+    "test": "echo 'Tests not configured yet'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iamtowbee/isireel"
+  },
+  "keywords": [
+    "monorepo",
+    "ai",
+    "ml",
+    "ios",
+    "log-viewer",
+    "terminal-ui",
+    "pwa"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {}
+}
