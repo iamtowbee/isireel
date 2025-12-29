@@ -83,3 +83,37 @@ jobs:
         name: AITrainerTerminal-iOS
         path: build/*.ipa
         retention-days: 30
+
+    - name: Send IPA to Telegram
+      if: success()
+      env:
+        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      run: |
+        IPA_FILE=$(ls build/*.ipa | head -n 1)
+        IPA_NAME=$(basename "$IPA_FILE")
+        FILE_SIZE=$(ls -lh "$IPA_FILE" | awk '{print $5}')
+
+        # Get commit info
+        COMMIT_MSG=$(git log -1 --pretty=%B)
+        COMMIT_SHA=$(git rev-parse --short HEAD)
+        BRANCH_NAME=${GITHUB_REF#refs/heads/}
+
+        # Create caption
+        CAPTION="🎉 New iOS Build Ready!
+
+📱 App: AI Training Terminal
+📦 File: $IPA_NAME
+💾 Size: $FILE_SIZE
+🌿 Branch: $BRANCH_NAME
+🔖 Commit: $COMMIT_SHA
+
+📝 $COMMIT_MSG
+
+✅ Download and install with AltStore!"
+
+        # Send to Telegram
+        curl -F "chat_id=$TELEGRAM_CHAT_ID" \
+             -F "document=@$IPA_FILE" \
+             -F "caption=$CAPTION" \
+             "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendDocument"
