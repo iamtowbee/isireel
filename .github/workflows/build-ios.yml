@@ -99,8 +99,10 @@ jobs:
         COMMIT_SHA=$(git rev-parse --short HEAD)
         BRANCH_NAME=${GITHUB_REF#refs/heads/}
 
-        # Create caption
-        CAPTION="🎉 New iOS Build Ready!
+        # Send to Telegram
+        curl -F "chat_id=$TELEGRAM_CHAT_ID" \
+             -F "document=@$IPA_FILE" \
+             -F "caption=🎉 New iOS Build Ready!
 
 📱 App: AI Training Terminal
 📦 File: $IPA_NAME
@@ -110,10 +112,5 @@ jobs:
 
 📝 $COMMIT_MSG
 
-✅ Download and install with AltStore!"
-
-        # Send to Telegram
-        curl -F "chat_id=$TELEGRAM_CHAT_ID" \
-             -F "document=@$IPA_FILE" \
-             -F "caption=$CAPTION" \
+✅ Download and install with AltStore!" \
              "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendDocument"
