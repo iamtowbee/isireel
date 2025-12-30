@@ -229,6 +229,27 @@ result = model.predict("input text")
 - Inference: < 20ms on mobile CPU
 - Works offline - no API calls needed
 
+### iOS App Analysis
+
+Decompile and analyze iOS IPA files (requires authorization):
+
+```bash
+# Analyze any IPA file
+python ipa_decompiler.py YourApp.ipa
+
+# Advanced analysis (classes, disassembly)
+python ipa_advanced.py path/to/binary
+```
+
+**See [IPA_ANALYSIS.md](IPA_ANALYSIS.md) for complete guide.**
+
+**Features:**
+- Extract app contents and assets
+- Find API keys, URLs, secrets
+- Dump Objective-C classes
+- Disassemble binary code
+- Security audit capabilities
+
 ### Next Steps
 
 - Generate more training data for better accuracy
