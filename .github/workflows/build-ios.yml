@@ -31,12 +31,15 @@ jobs:
         rustup target add x86_64-apple-ios
         rustup target add aarch64-apple-ios-sim
 
-    - name: Install dependencies
+    - name: Install Node dependencies
       run: npm install
 
     - name: Build Rust library for iOS
       run: |
+        echo "Building Rust for iOS device..."
         cargo build --release --target aarch64-apple-ios
+
+        echo "Building Rust for iOS simulator..."
         cargo build --release --target x86_64-apple-ios
         cargo build --release --target aarch64-apple-ios-sim
 
@@ -48,6 +51,7 @@ jobs:
           target/aarch64-apple-ios-sim/release/libai_trainer.a \
           -output target/universal-sim/release/libai_trainer.a
 
+        rm -rf ios/AITrainer.xcframework
         xcodebuild -create-xcframework \
           -library target/aarch64-apple-ios/release/libai_trainer.a \
           -headers ios \
@@ -57,31 +61,59 @@ jobs:
 
     - name: Install CocoaPods
       run: |
+        gem install cocoapods
         cd ios
-        pod install
+        pod install || pod install --repo-update
         cd ..
 
-    - name: Build iOS app
+    - name: Setup Xcode project
       run: |
-        xcodebuild -workspace ios/AITrainerTerminal.xcworkspace \
-          -scheme AITrainerTerminal \
-          -configuration Release \
-          -destination 'generic/platform=iOS' \
-          -archivePath $PWD/build/AITrainerTerminal.xcarchive \
-          archive
+        # Use React Native to initialize iOS project if needed
+        npx react-native upgrade --legacy true || true
 
-    - name: Export IPA
+    - name: Build app with xcodebuild
       run: |
-        xcodebuild -exportArchive \
-          -archivePath $PWD/build/AITrainerTerminal.xcarchive \
-          -exportPath $PWD/build \
-          -exportOptionsPlist ios/ExportOptions.plist
+        # Find the workspace
+        WORKSPACE=$(find ios -name "*.xcworkspace" | head -n 1)
 
-    - name: Upload IPA
+        if [ -z "$WORKSPACE" ]; then
+          echo "No workspace found, using xcodeproj..."
+          PROJECT=$(find ios -name "*.xcodeproj" | head -n 1)
+
+          xcodebuild -project "$PROJECT" \
+            -scheme AITrainerTerminal \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -archivePath $PWD/build/AITrainerTerminal.xcarchive \
+            archive \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO
+        else
+          xcodebuild -workspace "$WORKSPACE" \
+            -scheme AITrainerTerminal \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -archivePath $PWD/build/AITrainerTerminal.xcarchive \
+            archive \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO
+        fi
+
+    - name: Create IPA
+      run: |
+        mkdir -p build/Payload
+        cp -r build/AITrainerTerminal.xcarchive/Products/Applications/*.app build/Payload/
+        cd build
+        zip -r AITrainerTerminal.ipa Payload
+        cd ..
+
+    - name: Upload IPA artifact
       uses: actions/upload-artifact@v3
       with:
         name: AITrainerTerminal-iOS
-        path: build/*.ipa
+        path: build/AITrainerTerminal.ipa
         retention-days: 30
 
     - name: Send IPA to Telegram
@@ -90,22 +122,22 @@ jobs:
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
       run: |
-        IPA_FILE=$(ls build/*.ipa | head -n 1)
-        IPA_NAME=$(basename "$IPA_FILE")
-        FILE_SIZE=$(ls -lh "$IPA_FILE" | awk '{print $5}')
+        if [ -z "$TELEGRAM_BOT_TOKEN" ] || [ -z "$TELEGRAM_CHAT_ID" ]; then
+          echo "Telegram secrets not set. Skipping Telegram notification."
+          exit 0
+        fi
 
-        # Get commit info
-        COMMIT_MSG=$(git log -1 --pretty=%B)
+        IPA_FILE="build/AITrainerTerminal.ipa"
+        FILE_SIZE=$(ls -lh "$IPA_FILE" | awk '{print $5}')
+        COMMIT_MSG=$(git log -1 --pretty=%B | head -n 1)
         COMMIT_SHA=$(git rev-parse --short HEAD)
         BRANCH_NAME=${GITHUB_REF#refs/heads/}
 
-        # Send to Telegram
         curl -F "chat_id=$TELEGRAM_CHAT_ID" \
              -F "document=@$IPA_FILE" \
              -F "caption=🎉 New iOS Build Ready!
 
 📱 App: AI Training Terminal
-📦 File: $IPA_NAME
 💾 Size: $FILE_SIZE
 🌿 Branch: $BRANCH_NAME
 🔖 Commit: $COMMIT_SHA
