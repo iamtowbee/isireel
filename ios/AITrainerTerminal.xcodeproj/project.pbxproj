@@ -1,0 +1,17 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 54;
+	objects = {
+		13B07F961A680F5B00A75B9A /* AITrainerTerminal */ = {
+			isa = PBXFileReference;
+			explicitFileType = wrapper.application;
+			includeInIndex = 0;
+			path = AITrainerTerminal.app;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+	};
+	rootObject = 83CBB9F71A601CBA00E9B192 /* Project object */;
+}
