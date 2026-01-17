@@ -12,6 +12,7 @@ import LocalModelsScreen from './app/screens/LocalModelsScreen';
 import PlaygroundScreen from './app/screens/PlaygroundScreen';
 import ChatScreen from './app/screens/ChatScreen';
 import MockTrainerScreen from './app/screens/MockTrainerScreen';
+import StatsScreen from './app/screens/StatsScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -32,6 +33,8 @@ const App = () => {
                 iconName = focused ? 'game-controller' : 'game-controller-outline';
               } else if (route.name === 'Mock') {
                 iconName = focused ? 'flask' : 'flask-outline';
+              } else if (route.name === 'Stats') {
+                iconName = focused ? 'stats-chart' : 'stats-chart-outline';
               } else if (route.name === 'GUI') {
                 iconName = focused ? 'apps' : 'apps-outline';
               } else if (route.name === 'Jobs') {
@@ -85,6 +88,13 @@ const App = () => {
             component={MockTrainerScreen}
             options={{
               title: 'Mock Lab',
+            }}
+          />
+          <Tab.Screen
+            name="Stats"
+            component={StatsScreen}
+            options={{
+              title: 'Stats',
             }}
           />
           <Tab.Screen
