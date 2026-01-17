@@ -13,6 +13,7 @@ import PlaygroundScreen from './app/screens/PlaygroundScreen';
 import ChatScreen from './app/screens/ChatScreen';
 import MockTrainerScreen from './app/screens/MockTrainerScreen';
 import StatsScreen from './app/screens/StatsScreen';
+import SettingsScreen from './app/screens/SettingsScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -35,6 +36,8 @@ const App = () => {
                 iconName = focused ? 'flask' : 'flask-outline';
               } else if (route.name === 'Stats') {
                 iconName = focused ? 'stats-chart' : 'stats-chart-outline';
+              } else if (route.name === 'Settings') {
+                iconName = focused ? 'settings' : 'settings-outline';
               } else if (route.name === 'GUI') {
                 iconName = focused ? 'apps' : 'apps-outline';
               } else if (route.name === 'Jobs') {
@@ -123,6 +126,13 @@ const App = () => {
             component={LocalModelsScreen}
             options={{
               title: 'Local Models',
+            }}
+          />
+          <Tab.Screen
+            name="Settings"
+            component={SettingsScreen}
+            options={{
+              title: 'Settings',
             }}
           />
         </Tab.Navigator>
