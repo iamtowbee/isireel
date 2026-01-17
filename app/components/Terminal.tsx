@@ -44,6 +44,11 @@ const HELP_TEXT = `Available Commands:
   ║  ascii                    Show ASCII art logo            ║
   ║  hack                     Hacker mode simulation         ║
   ║  matrix                   Enter the Matrix               ║
+  ║  mock                     Mock training mode             ║
+  ║  yolo                     YOLO mode (chaos!)             ║
+  ║  sudo make                Make me a sandwich             ║
+  ║  rm -rf /                 Try to delete everything       ║
+  ║  exit/quit                Try to quit (you can't)        ║
   ║  about                    About this app                 ║
   ║  credits                  Show credits                   ║
   ╠══════════════════════════════════════════════════════════╣
@@ -244,6 +249,80 @@ Train models. Bend reality. Break limits.`;
 ║      community!                              ║
 ║                                               ║
 ╚═══════════════════════════════════════════════╝`;
+          break;
+
+        case 'mock':
+          output = `🎭 ENTERING MOCK MODE...
+
+> Initializing fake AI...           ✓
+> Pretending to train...             ✓
+> Making up statistics...            ✓
+> Generating nonsense...             ✓
+
+😂 Mock mode activated! Nothing here is real!
+Try typing 'train pizza.jsonl comedy-gpt-9000'
+
+Just kidding! For real mock fun, check out the Mock tab! 🎪`;
+          break;
+
+        case 'yolo':
+          output = `🎯 YOLO MODE ENGAGED!
+
+Training with ZERO validation... ✓
+Using random hyperparameters... ✓
+Ignoring all best practices... ✓
+Maximum chaos achieved! ✓
+
+😎 You live once! Let's break some models!
+
+(Please don't actually do this in production)`;
+          break;
+
+        case 'sudo':
+          if (args.length > 0 && args[0] === 'make') {
+            output = `🍔 sudo make me a sandwich...
+
+> Analyzing bread composition...
+> Optimizing mayo distribution...
+> Training lettuce placement model...
+> Fine-tuning pickle alignment...
+
+✅ Sandwich successfully compiled!
+🥪 Here's your AI-generated sandwich!
+
+(Actual sandwich not included)`;
+          } else {
+            output = `🔐 Nice try! You need root access to the AI mainframe.
+
+sudo: command not authorized
+Just kidding, this isn't Linux 😄`;
+          }
+          break;
+
+        case 'rm':
+          if (args.includes('-rf') && args.includes('/')) {
+            output = `⚠️  CRITICAL ERROR ⚠️
+
+Are you trying to delete the entire universe?!
+
+> Catastrophic deletion prevented
+> Your AI models are safe... for now
+> Maybe try 'clear' instead? 😅
+
+Nice try, chaos agent!`;
+          } else {
+            output = `🗑️  Deleting... just kidding!
+This isn't a real file system.
+Nothing was harmed in this command.`;
+          }
+          break;
+
+        case 'exit':
+        case 'quit':
+          output = `👋 You can't quit AI! AI is life!
+
+But seriously, you can't exit this app from here.
+Just swipe up or press the home button like a normal person 😄`;
           break;
 
         default:

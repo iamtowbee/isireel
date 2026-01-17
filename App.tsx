@@ -11,6 +11,7 @@ import IPAManagerScreen from './app/screens/IPAManagerScreen';
 import LocalModelsScreen from './app/screens/LocalModelsScreen';
 import PlaygroundScreen from './app/screens/PlaygroundScreen';
 import ChatScreen from './app/screens/ChatScreen';
+import MockTrainerScreen from './app/screens/MockTrainerScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -27,16 +28,18 @@ const App = () => {
                 iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
               } else if (route.name === 'Terminal') {
                 iconName = focused ? 'terminal' : 'terminal-outline';
+              } else if (route.name === 'Play') {
+                iconName = focused ? 'game-controller' : 'game-controller-outline';
+              } else if (route.name === 'Mock') {
+                iconName = focused ? 'flask' : 'flask-outline';
               } else if (route.name === 'GUI') {
                 iconName = focused ? 'apps' : 'apps-outline';
               } else if (route.name === 'Jobs') {
                 iconName = focused ? 'list' : 'list-outline';
               } else if (route.name === 'IPAs') {
                 iconName = focused ? 'download' : 'download-outline';
-              } else if (route.name === 'Local') {
-                iconName = focused ? 'cube' : 'cube-outline';
               } else {
-                iconName = focused ? 'game-controller' : 'game-controller-outline';
+                iconName = focused ? 'cube' : 'cube-outline';
               }
 
               return <Icon name={iconName} size={size} color={color} />;
@@ -71,6 +74,20 @@ const App = () => {
             }}
           />
           <Tab.Screen
+            name="Play"
+            component={PlaygroundScreen}
+            options={{
+              title: 'Playground',
+            }}
+          />
+          <Tab.Screen
+            name="Mock"
+            component={MockTrainerScreen}
+            options={{
+              title: 'Mock Lab',
+            }}
+          />
+          <Tab.Screen
             name="GUI"
             component={GUIScreen}
             options={{
@@ -96,13 +113,6 @@ const App = () => {
             component={LocalModelsScreen}
             options={{
               title: 'Local Models',
-            }}
-          />
-          <Tab.Screen
-            name="Play"
-            component={PlaygroundScreen}
-            options={{
-              title: 'Playground',
             }}
           />
         </Tab.Navigator>
