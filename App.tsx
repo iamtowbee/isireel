@@ -9,6 +9,7 @@ import GUIScreen from './app/screens/GUIScreen';
 import JobsScreen from './app/screens/JobsScreen';
 import IPAManagerScreen from './app/screens/IPAManagerScreen';
 import LocalModelsScreen from './app/screens/LocalModelsScreen';
+import PlaygroundScreen from './app/screens/PlaygroundScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -29,8 +30,10 @@ const App = () => {
                 iconName = focused ? 'list' : 'list-outline';
               } else if (route.name === 'IPAs') {
                 iconName = focused ? 'download' : 'download-outline';
-              } else {
+              } else if (route.name === 'Local') {
                 iconName = focused ? 'cube' : 'cube-outline';
+              } else {
+                iconName = focused ? 'game-controller' : 'game-controller-outline';
               }
 
               return <Icon name={iconName} size={size} color={color} />;
@@ -83,6 +86,13 @@ const App = () => {
             component={LocalModelsScreen}
             options={{
               title: 'Local Models',
+            }}
+          />
+          <Tab.Screen
+            name="Play"
+            component={PlaygroundScreen}
+            options={{
+              title: 'Playground',
             }}
           />
         </Tab.Navigator>
