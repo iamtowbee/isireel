@@ -10,6 +10,7 @@ import JobsScreen from './app/screens/JobsScreen';
 import IPAManagerScreen from './app/screens/IPAManagerScreen';
 import LocalModelsScreen from './app/screens/LocalModelsScreen';
 import PlaygroundScreen from './app/screens/PlaygroundScreen';
+import ChatScreen from './app/screens/ChatScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -22,7 +23,9 @@ const App = () => {
             tabBarIcon: ({ focused, color, size }) => {
               let iconName: string;
 
-              if (route.name === 'Terminal') {
+              if (route.name === 'Chat') {
+                iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
+              } else if (route.name === 'Terminal') {
                 iconName = focused ? 'terminal' : 'terminal-outline';
               } else if (route.name === 'GUI') {
                 iconName = focused ? 'apps' : 'apps-outline';
@@ -53,6 +56,13 @@ const App = () => {
             },
           })}
         >
+          <Tab.Screen
+            name="Chat"
+            component={ChatScreen}
+            options={{
+              title: 'AI Chat',
+            }}
+          />
           <Tab.Screen
             name="Terminal"
             component={TerminalScreen}

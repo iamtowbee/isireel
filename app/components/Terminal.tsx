@@ -16,29 +16,47 @@ interface TerminalProps {
   onCommandExecuted?: (output: CommandOutput) => void;
 }
 
-const HELP_TEXT = `Available Commands:
-  help                          - Show this help message
-  init <api_key>                - Initialize AI trainer with API key
-  train <file> <model> [epochs] - Start training job
-  status <job_id>               - Get training job status
-  list                          - List all training jobs
-  cancel <job_id>               - Cancel a training job
-  test <model> <prompt>         - Test a model with a prompt
-  validate <file>               - Validate training data file
-  clear                         - Clear terminal output
+const ASCII_LOGO = `
+   ▄▄▄       ██▓    ▄▄▄█████▓ ██▀███   ▄▄▄       ██▓ ███▄    █
+  ▒████▄    ▓██▒    ▓  ██▒ ▓▒▓██ ▒ ██▒▒████▄    ▓██▒ ██ ▀█   █
+  ▒██  ▀█▄  ▒██▒    ▒ ▓██░ ▒░▓██ ░▄█ ▒▒██  ▀█▄  ▒██▒▓██  ▀█ ██▒
+  ░██▄▄▄▄██ ░██░    ░ ▓██▓ ░ ▒██▀▀█▄  ░██▄▄▄▄██ ░██░▓██▒  ▐▌██▒
+   ▓█   ▓██▒░██░      ▒██▒ ░ ░██▓ ▒██▒ ▓█   ▓██▒░██░▒██░   ▓██░
+   ▒▒   ▓▒█░░▓        ▒ ░░   ░ ▒▓ ░▒▓░ ▒▒   ▓▒█░░▓  ░ ▒░   ▒ ▒
+    ▒   ▒▒ ░ ▒ ░        ░      ░▒ ░ ▒░  ▒   ▒▒ ░ ▒ ░░ ░░   ░ ▒░
+    ░   ▒    ▒ ░      ░        ░░   ░   ░   ▒    ▒ ░   ░   ░ ░
+        ░  ░ ░                  ░           ░  ░ ░           ░
+`;
 
-Examples:
-  init sk-...
-  train /path/to/data.jsonl gpt-3.5-turbo 3
-  status job_abc123
-  test ft:gpt-3.5-turbo:... "Hello!"
+const HELP_TEXT = `Available Commands:
+  ╔══════════════════════════════════════════════════════════╗
+  ║                    AI TRAINING                           ║
+  ╠══════════════════════════════════════════════════════════╣
+  ║  init <api_key>           Initialize with OpenAI API     ║
+  ║  train <file> <model>     Start training job             ║
+  ║  status <job_id>          Get training job status        ║
+  ║  list                     List all training jobs         ║
+  ║  test <model> <prompt>    Test a model                   ║
+  ║  validate <file>          Validate training data         ║
+  ╠══════════════════════════════════════════════════════════╣
+  ║                    FUN COMMANDS                          ║
+  ╠══════════════════════════════════════════════════════════╣
+  ║  ascii                    Show ASCII art logo            ║
+  ║  hack                     Hacker mode simulation         ║
+  ║  matrix                   Enter the Matrix               ║
+  ║  about                    About this app                 ║
+  ║  credits                  Show credits                   ║
+  ╠══════════════════════════════════════════════════════════╣
+  ║  help                     Show this help                 ║
+  ║  clear                    Clear terminal                 ║
+  ╚══════════════════════════════════════════════════════════╝
 `;
 
 const Terminal: React.FC<TerminalProps> = ({ onCommandExecuted }) => {
   const [history, setHistory] = useState<CommandOutput[]>([
     {
       command: 'welcome',
-      output: 'AI Training Terminal\nType "help" for available commands.',
+      output: ASCII_LOGO + '\n🚀 AI Training Terminal v1.0\n💡 Type "help" for available commands.',
       timestamp: Date.now(),
       success: true,
     },
@@ -160,8 +178,76 @@ const Terminal: React.FC<TerminalProps> = ({ onCommandExecuted }) => {
           setHistory([]);
           return;
 
+        case 'ascii':
+          output = ASCII_LOGO + '\n✨ AI Training Terminal - Powered by Rust + React Native';
+          break;
+
+        case 'hack':
+          output = `[INITIALIZING HACKER MODE...]
+> Connecting to mainframe...  ✓
+> Bypassing firewall...       ✓
+> Accessing neural network... ✓
+> Decrypting AI models...     ✓
+
+🔓 ACCESS GRANTED
+
+Just kidding! 😄 This is a legit AI training app!
+Try 'train' to actually train some models.`;
+          break;
+
+        case 'matrix':
+          output = `Wake up, Neo...
+The Matrix has you...
+Follow the white rabbit.
+
+╔═══════════════════════════════════════╗
+║  "There is no spoon" - Only AI models ║
+╚═══════════════════════════════════════╝
+
+🟢 You're now in the AI Matrix!
+Train models. Bend reality. Break limits.`;
+          break;
+
+        case 'about':
+          output = `╔═══════════════════════════════════════════════╗
+║        AI TRAINING TERMINAL v1.0              ║
+╠═══════════════════════════════════════════════╣
+║                                               ║
+║  🚀  Train OpenAI models on your iPhone      ║
+║  🦀  Powered by Rust backend                 ║
+║  ⚛️   React Native frontend                  ║
+║  🤖  TensorFlow Lite on-device inference     ║
+║  📱  iPhone-only development workflow        ║
+║  ☁️   Cloud builds via GitHub Actions        ║
+║                                               ║
+║  Built for AI enthusiasts who want to        ║
+║  train and deploy models anywhere!           ║
+║                                               ║
+╚═══════════════════════════════════════════════╝`;
+          break;
+
+        case 'credits':
+          output = `╔═══════════════════════════════════════════════╗
+║                 CREDITS                       ║
+╠═══════════════════════════════════════════════╣
+║                                               ║
+║  👤  Created by: Yobi                        ║
+║  🤖  AI Assistant: Claude (Anthropic)        ║
+║  🛠️   Tech Stack:                             ║
+║      • Rust (Backend)                        ║
+║      • React Native (Frontend)               ║
+║      • TensorFlow Lite                       ║
+║      • OpenAI API                            ║
+║      • GitHub Actions                        ║
+║                                               ║
+║  💡  Special thanks to the open source       ║
+║      community!                              ║
+║                                               ║
+╚═══════════════════════════════════════════════╝`;
+          break;
+
         default:
-          output = `Unknown command: ${command}\nType "help" for available commands.`;
+          output = `❌ Unknown command: ${command}\n💡 Type "help" for available commands.`;
           success = false;
       }
     } catch (error) {
