@@ -12,6 +12,9 @@ target 'AITrainerTerminal' do
     :fabric_enabled => false,
   )
 
+  # TensorFlow Lite for on-device AI
+  pod 'TensorFlowLiteC', '~> 2.14.0'
+
   target 'AITrainerTerminalTests' do
     inherit! :complete
   end
